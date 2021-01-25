@@ -40,10 +40,9 @@ Contents of rl-connector-gg
 can be anywhere that is suitable for your setup.</li>
   <li>ogg/dirprm – Parameter file for GoldenGate setup and connection</li>
   <ol>
-  <li>&nbsp;&nbsp;JAVAUE.PRM - In this setup our UserExit is called JAVAUE and the parameter file iis called JAVAUE.PRM</li>
-  <li>&nbsp;&nbsp;javaue.properties - This property file sets connector system properties and classpath. Please pay attention to the below two lines and make sure the handler (in this example it is redis) is added to the list of handlers in javaue.properties.</li>
-  &nbsp;&nbsp;gg.handler.redis.type=com.ivoyant.cdc.connector.ogg.GGExit
-  &nbsp;&nbsp;javawriter.bootoptions=-Xmx1024m -Xms512m  -Dlogback.configurationFile=dirprm/logback.xml -Divoyant.cdc.connector.config=/u01/app/ogg/extlib/config -Djava.class.path=ggadapter/12.2.0.1/ggjava/ggjava.jar:ggadapter/12.2.0.1/ggjava/resources/lib/optional/logback/logback-classic.jar:ggadapter/12.2.0.1/ggjava/resources/lib/optional/logback/logback-core.jar:/dirprm:.
+  <li>&nbsp;JAVAUE.PRM - In this setup our UserExit is called JAVAUE and the parameter file iis called JAVAUE.PRM</li>
+  <li>&nbsp;javaue.properties - This property file sets connector system properties and classpath. Please pay attention to the below two lines and make sure the handler (in this example it is redis) is added to the list of handlers in javaue.properties. &nbsp;&nbsp;gg.handler.redis.type=com.ivoyant.cdc.connector.ogg.GGExit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;javawriter.bootoptions=-Xmx1024m -Xms512m  -Dlogback.configurationFile=dirprm/logback.xml -Divoyant.cdc.connector.config=/u01/app/ogg/extlib/config -Djava.class.path=ggadapter/12.2.0.1/ggjava/ggjava.jar:ggadapter/12.2.0.1/ggjava/resources/lib/optional/logback/logback-classic.jar:ggadapter/12.2.0.1/ggjava/resources/lib/optional/logback/logback-core.jar:/dirprm:.</li>
   </ol>
   <li>ogg/extlib – Place all the libraries that are needed by the connector in this folder. This folder is provided in the classpath in
 javaue.properties</li>
