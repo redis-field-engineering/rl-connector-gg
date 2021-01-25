@@ -35,22 +35,24 @@ All the contents would be extracted under rl-connector-gg
 Contents of rl-connector-gg
 <p align="left"><img src="https://github.com/RedisLabs-Field-Engineering/RedisCDC/blob/master/docs/images/rl-connector-gg-dir.png" alt="rl-connector-gg" height="450px"></p>
 
-<ul>ogg/dirdat – Data folder for Golden Gate. The location of this folder is provided in parameter file while configuring the exit. This location
-can be anywhere that is suitable for your setup.</ul>
-<ul>ogg/dirprm – Parameter file for GoldenGate setup and connection
-  <li>JAVAUE.PRM - In this setup our UserExit is called JAVAUE and the parameter file iis called JAVAUE.PRM</li>
-  <li>javaue.properties - This property file sets connector system properties and classpath. Please pay attention to the below two lines and make sure
-the handler (in this example it is redis) is added to the list of handlers in javaue.properties.</li>
-  <br>1. gg.handler.redis.type=com.ivoyant.cdc.connector.ogg.GGExit
-  <br>2. javawriter.bootoptions=-Xmx1024m -Xms512m  -Dlogback.configurationFile=dirprm/logback.xml -Divoyant.cdc.connector.config=/u01/app/ogg/extlib/config -Djava.class.path=ggadapter/12.2.0.1/ggjava/ggjava.jar:ggadapter/12.2.0.1/ggjava/resources/lib/optional/logback/logback-classic.jar:ggadapter/12.2.0.1/ggjava/resources/lib/optional/logback/logback-core.jar:/dirprm:.
+<ul>
+  <li>ogg/dirdat – Data folder for Golden Gate. The location of this folder is provided in parameter file while configuring the exit. This location
+can be anywhere that is suitable for your setup.</li>
+  <li>ogg/dirprm – Parameter file for GoldenGate setup and connection</li>
+  <ol>
+  <li>&nbsp;&nbsp;JAVAUE.PRM - In this setup our UserExit is called JAVAUE and the parameter file iis called JAVAUE.PRM</li>
+  <li>&nbsp;&nbsp;javaue.properties - This property file sets connector system properties and classpath. Please pay attention to the below two lines and make sure the handler (in this example it is redis) is added to the list of handlers in javaue.properties.</li>
+  &nbsp;&nbsp;gg.handler.redis.type=com.ivoyant.cdc.connector.ogg.GGExit
+  &nbsp;&nbsp;javawriter.bootoptions=-Xmx1024m -Xms512m  -Dlogback.configurationFile=dirprm/logback.xml -Divoyant.cdc.connector.config=/u01/app/ogg/extlib/config -Djava.class.path=ggadapter/12.2.0.1/ggjava/ggjava.jar:ggadapter/12.2.0.1/ggjava/resources/lib/optional/logback/logback-classic.jar:ggadapter/12.2.0.1/ggjava/resources/lib/optional/logback/logback-core.jar:/dirprm:.
+  </ol>
+  <li>ogg/extlib – Place all the libraries that are needed by the connector in this folder. This folder is provided in the classpath in
+javaue.properties</li>
+  <li>ogg/extlib/config – This is the main config location. Connector loads mapper config from this location. Set -Divoyant.cdc.connector.config to
+this location.</li>
+  <li>ogg/extlib/config/mappers – Mapping files for the connector. These Mapper file tell which columns should be mapped from source (Oracle) to target
+(Redis Enterprise)</li>
+  <li>ogg/extlib/config/redis-connections.props – Contains redis connection details. The property key is the same that is provided as connectionId value in mapping file.</li>
 </ul>
-<ul>ogg/extlib – Place all the libraries that are needed by the connector in this folder. This folder is provided in the classpath in
-javaue.properties</ul>
-<ul>ogg/extlib/config – This is the main config location. Connector loads mapper config from this location. Set -Divoyant.cdc.connector.config to
-this location.</ul>
-<ul>ogg/extlib/config/mappers – Mapping files for the connector. These Mapper file tell which columns should be mapped from source (Oracle) to target
-(Redis Enterprise)</ul>
-<ul>ogg/extlib/config/redis-connections.props – Contains redis connection details. The property key is the same that is provided as connectionId value in mapping file.</ul>
 
 <p>
   If you had the sample file handler working well before, this connector should work if all the configs are in the right place. Follow the steps below to start the connector
