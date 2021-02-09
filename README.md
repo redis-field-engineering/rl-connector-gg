@@ -4,6 +4,16 @@
 ## Overview
 Redis Enterprise Change Data Capture (CDC) Connector for Oracle Golden Gate is a custom user exit, that makes it easier to configure and move changes from Oracle to Redis Enterprise Database or other Sinks e.g. [JMS](https://www.oracle.com/java/technologies/java-message-service.html). Below are few important features of the connector,
 
+## Architecture
+
+![Oracle Golden Gate Connector Redis high-level Architecture](/docs/images/oracle-gg-connector-redis.png)
+<b>Oracle Golden Gate Connector Redis high-level Architecture Diagram</b>
+
+<p></p>
+
+![Oracle Golden Gate Connector Redis Architecture](/docs/images/oracle-gg-connector-redis-arch.png)
+<b>Oracle Golden Gate Connector Redis Architecture Diagram</b>
+
 #### Configuration driven approach
 <ul>
   <li>Ability to filter tables and columns.</li>
