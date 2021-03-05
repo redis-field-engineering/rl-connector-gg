@@ -29,13 +29,18 @@ Redis Enterprise Change Data Capture (CDC) Connector for Oracle Golden Gate is a
 ## Prerequisites
 <ul>
   <li>Java Version - 1.8</li>
-  <li>Golden Gate Version - 12.x</li>
-  <li>Java adapter for golden gate - 12.x</li>
+  <li>Oracle Version - 11g, 12c</li>
+  <li>Golden Gate Version - 12.x, 19.1</li>
+  <li>Java adapter for golden gate - 12.x, 19.1</li>
 </ul>
 
-The Goldengate application adapter for Java should be setup and configured. This connector has been tested with GG application adapter version
+The Goldengate application adapter for Java should be setup and configured. This connector has been tested with the following GG application adapter versions,
+<br>
 [12.2.0.1.1](https://docs.oracle.com/en/middleware/goldengate/adapter/12.2.0.1.1/index.html)
-The installation has been tested with the built in [file handler](https://docs.oracle.com/goldengate/gg121211/gg-adapter/GADAD/flatfile_config.htm#GADAD424).
+<br>
+[19.1](https://docs.oracle.com/pls/topic/lookup?ctx=en/middleware/goldengate/big-data/19.1/gbdin&id=GADBD-GUID-A6C0DEC9-480F-4782-BD2A-54FEDDE2FDD9)
+<br>
+The installation and setup has also been tested with the built in [file handler](https://docs.oracle.com/goldengate/gg121211/gg-adapter/GADAD/flatfile_config.htm#GADAD424) and we have necessary velocity template file in the package to convert the CDC events into a XML file.
 
 ## Install and Setup
 Download the [latest release](https://github.com/RedisLabs-Field-Engineering/rl-connector-gg/releases) e.g. ```wget https://github.com/RedisLabs-Field-Engineering/rl-connector-gg/releases/download/v1.0/rl-connector-gg-1.0.tar.gz``` and untar (tar -xvf rl-connector-gg-1.0.tar.gz) the rl-connector-gg-1.0.tar.gz archive.
@@ -60,10 +65,82 @@ can be anywhere that is suitable for your setup.</li>
 javaue.properties</li>
   <li>ogg/extlib/config – This is the main config location. Connector loads mapper config from this location. Set -Divoyant.cdc.connector.config to
 this location.</li>
-  <li>ogg/extlib/config/mappers – Mapping files for the connector. These Mapper file tell which columns should be mapped from source (Oracle) to target
+  <li>ogg/extlib/config/mappers – Mapping files for the connector. These Mapper file(s) defines the mapping from source (Oracle) to target
 (Redis Enterprise)</li>
+<details><summary>Sample mapper.xml</summary>
+<p>
+
+#### mapper configuration file.
+### Sample mapper.xml under rl-connector-gg/ogg/extlib/config/mappers folder
+
+```xml
+<Schema xmlns="http://cdc.connector.ivoyant.com/Mapper/Config" name="ORCLPDB1.HR"> <!-- Schema name e.g. HR. One mapper file per schema and you can have multiple tables in the same mapper file as long as schema is same, otherwise create multiple mapper files e.g. mapper1.xml, mapper2.xml or <table_name>.xml etc. under mappers folder of your config dir.-->
+    <Tables>
+        <Table name="EMPLOYEES"> <!-- EMPLOYEES table under HR schema -->
+            <!-- publishBefore - Global setting, that specifies if before values have to be published for all columns
+ *                 - This setting could be overridden at each column level -->
+            <Processors>
+                <RedisProcessor id="EMPLOYEES" processorID="REDIS_HASH_PROCESSOR" publishChangedColumnsOnly="false" deleteOnKeyUpdate="true" prependTableNameToKey="true">
+                    <Mapper>
+                        <Column src="EMPLOYEE_ID" target="EmpNumber" type="INT"/> <!-- key column on the source emp table -->
+                        <Column src="FIRST_NAME" target="FName"/>
+                        <Column src="LAST_NAME" target="LName"/>
+                        <Column src="JOB_ID" target="JobId"/>
+                        <Column src="HIRE_DATE" target="StartDate"/>
+                        <Column src="SALARY" target="Salary" type="DOUBLE"/>
+                    </Mapper>
+                    <RedisSink connectionId="cluster1" async="true"/>
+                </RedisProcessor>
+            </Processors>
+        </Table>
+        <Table name="EMPLOYEES_DATA">
+            <Processors>
+                <RedisProcessor id="EMPLOYEES_DATA" processorID="REDIS_STRIING_PROCESSOR" publishChangedColumnsOnly="false" deleteOnKeyUpdate="true" prependTableNameToKey="false">
+                    <Mapper>
+                        <Column src="EMPLOYEE_ID" target="EmpNumber" type="INT"/> <!-- key column on the source EMPLOYEES_DATA table -->
+                        <Column src="FIRST_NAME" target="FName"/>
+                        <Column src="LAST_NAME" target="LName"/>
+                        <Column src="JOB_ID" target="JobId"/>
+                        <Column src="HIRE_DATE" target="StartDate"/>
+                        <Column src="SALARY" target="Salary" type="DOUBLE"/>
+                    </Mapper>
+                    <RedisSink connectionId="cluster1" async="true">
+                        <Formatter>FREEMARKER_FORMATTER</Formatter>
+                        <FormatterTemplate>pipe-delimited.ftl</FormatterTemplate>
+                    </RedisSink>
+                </RedisProcessor>
+            </Processors>
+        </Table>      
+    </Tables>
+</Schema>
+      
+```
+If you don't need any transformation of source columns then you can simply use passThrough option and you don't need to explicitly map each source columns to Redis target data structure.
+```xml
+<Schema xmlns="http://cdc.connector.ivoyant.com/Mapper/Config" name="ORCLPDB1.HR"> <!-- Schema name e.g. HR. One mapper file per schema and you can have multiple tables in the same mapper file as long as schema is same, otherwise create multiple mapper files e.g. mapper1.xml, mapper2.xml or <table_name>.xml etc. under mappers folder of your config dir.-->
+    <Tables>
+        <Table name="EMPLOYEES"> <!-- EMPLOYEES table under HR schema -->
+            <!-- publishBefore - Global setting, that specifies if before values have to be published for all columns
+ *                 - This setting could be overridden at each column level -->
+            <Processors>
+                <RedisProcessor id="EMPLOYEES-Passthrough" processorID="REDIS_HASH_PROCESSOR" passThrough="true" publishChangedColumnsOnly="false" deleteOnKeyUpdate="true" prependTableNameToKey="true">
+                    <Mapper>
+                        <Column src="EMPLOYEE_ID" target="EmpNumber" type="INT"/> <!-- key column on the source emp table -->
+                    </Mapper>
+                    <RedisSink connectionId="cluster1" async="true"/>
+                </RedisProcessor>
+            </Processors>
+        </Table>
+    </Tables>
+</Schema>
+```
+
+</p>
+</details>
   <li>ogg/extlib/config/redis-connections.props – Contains redis connection details. The property key is the same that is provided as connectionId value in mapping file.</li>
 </ul>
+
+Please see [here](https://github.com/lettuce-io/lettuce-core/wiki/Redis-URI-and-connection-details#uri-syntax) for Redis URI syntax.
 
 <br>
 If you had the sample file handler working well before, this connector should work if all the configs are in the right place. Follow the steps below to start the connector
@@ -76,5 +153,20 @@ If you had the sample file handler working well before, this connector should wo
 <br>Logs of the extract are also located within the /u01/app/ogg/dirrpt directory.
 <br>If everything has been configured properly, you will be able to observe the data being replicated in redis.
 <br>If you make any changes by replacing a jar or changing a configuration file, you must stop the extract and start it again to see the new changes.
-<br>For troubleshooting look at the standard user exit log files and connector log file (dafault location is logs/cdc-1.log).
-  
+<br>For troubleshooting look at the standard user exit log files and connector log file (dafault location is logs/cdc-1.log). Please ensure that logback jars are available in the classpath as shown in the sample `javaue.properties` under `javawriter.bootoptions`.
+<br>The connector works with [EXTRACT](https://docs.oracle.com/goldengate/gg12201/gg-adapter/GADAD/GUID-4A07BBD8-5E9E-406E-9D5C-9DA3FDF1C165.htm#GADBD124) setup as shown in the sample `JAVAUE.prm` file under dirprm directory but starting with Oracle Golden Gate version 19.x, you need a [REPLICAT](https://docs.oracle.com/goldengate/gg12201/gg-adapter/GADAD/GUID-4A07BBD8-5E9E-406E-9D5C-9DA3FDF1C165.htm#GADBD117) setup. Here is a sample of REPLICAT,
+<br>
+```bash
+REPLICAT JAVAUE
+getEnv (JAVA_HOME)
+getEnv (LD_LIBRARY_PATH)
+getEnv (PATH)
+TARGETDB LIBFILE libggjava.so SET property=dirprm/javaue.properties
+STATOPTIONS RESETREPORTSTATS
+REPORT AT 11:59
+REPORTROLLOVER AT 00:01
+REPORTCOUNT EVERY 30 MINUTES, RATE
+GROUPTRANSOPS 1000
+GETUPDATEBEFORES
+MAP HR.*, TARGET HR.*;
+```
