@@ -95,7 +95,7 @@ this location.</li>
         </Table>
         <Table name="EMPLOYEES_DATA">
             <Processors>
-                <RedisProcessor id="EMPLOYEES_DATA" processorID="REDIS_STRIING_PROCESSOR" publishChangedColumnsOnly="false" deleteOnKeyUpdate="true" prependTableNameToKey="false">
+                <RedisProcessor id="EMPLOYEES_DATA" processorID="REDIS_STRING_PROCESSOR" publishChangedColumnsOnly="false" deleteOnKeyUpdate="true" prependTableNameToKey="false">
                     <Mapper>
                         <Column src="EMPLOYEE_ID" target="EmpNumber" type="INT"/> <!-- key column on the source EMPLOYEES_DATA table -->
                         <Column src="FIRST_NAME" target="FName"/>
