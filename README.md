@@ -170,3 +170,4 @@ GROUPTRANSOPS 1000
 GETUPDATEBEFORES
 MAP HR.*, TARGET HR.*;
 ```
+<br>Please see [TABLE | MAP](https://docs.oracle.com/goldengate/c1221/gg-winux/GWURF/table-map.htm#GWURF546) options for EXTRACT and REPLICAT.
