@@ -48,7 +48,7 @@ Download the [latest release](https://github.com/RedisLabs-Field-Engineering/rl-
 All the contents would be extracted under rl-connector-gg
 
 Contents of rl-connector-gg
-<p align="left"><img src="https://github.com/RedisLabs-Field-Engineering/RedisCDC/blob/master/docs/images/rl-connector-gg-dir.png" alt="rl-connector-gg" height="450px"></p>
+<p align="left"><img src="https://github.com/RedisLabs-Field-Engineering/RedisCDC/blob/main/docs/images/rl-connector-gg-dir.png" alt="rl-connector-gg" height="450px"></p>
 
 <ul>
   <li>ogg/dirdat – Data folder for Golden Gate. The location of this folder is provided in parameter file while configuring the exit. This location
