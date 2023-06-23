@@ -1,4 +1,4 @@
-# rl-connector-gg
+# rl-connector-gg [DEPRECATED]
 ### Redis Enterprise Oracle Golden Gate Connector
 
 ## Overview
