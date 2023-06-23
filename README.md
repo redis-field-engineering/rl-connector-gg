@@ -1,4 +1,7 @@
 # rl-connector-gg [DEPRECATED]
+
+# Please use [Oracle GoldenGate for Big Data](https://docs.oracle.com/en/middleware/goldengate/big-data/21.1/gadbd/redis-handler-using-redis-handler.html#GUID-A18BF7B8-3DAE-415D-BF98-CC78D93D8BE0)
+
 ### Redis Enterprise Oracle Golden Gate Connector
 
 ## Overview
